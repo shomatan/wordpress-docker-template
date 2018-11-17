@@ -3,7 +3,7 @@ Easy to build Wordpress theme development environment.
 The main theme and the root directory are synchronized.
 
 ## Features
-- You don't have to install nginx and php, mysql.
+- You don't have to install Nginx and PHP, MySQL.
 
 ## Requirements
 - Docker
@@ -14,16 +14,16 @@ The main theme and the root directory are synchronized.
 ### 1. Build a Docker image
     make build
 
-### 2. Run the wordpress
+### 2. Execute Wordpress
 	make up
 
 After you can acccess [http://localhost](http://localhost).  
 If login, Username: `admin` Password: `admin`.
 
-### 3. Stop wordpress
+### 3. Stop Wordpress
     make stop
 
-### 4. Remove and delete volumes
+### 4. Remove all containers and delete volumes
     make destory
 
 ## Backup and restore
