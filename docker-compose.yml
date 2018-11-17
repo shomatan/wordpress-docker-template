@@ -1,0 +1,44 @@
+version: '3.2'
+
+services:
+
+  web:
+    container_name: wordpress-web
+    image: nginx
+    ports:
+      - 80:80
+    volumes:
+      - ./docker/nginx/nginx.conf:/etc/nginx/conf.d/default.conf
+      - app_volume:/var/www/html
+      - .:/var/www/html/wp-content/themes/main
+    depends_on:
+      - app
+
+  app:
+    container_name: wordpress-app
+    image: wordpress-app
+    volumes:
+      - app_volume:/var/www/html
+      - .:/var/www/html/wp-content/themes/main
+      - ignore_volume:/var/www/html/wp-content/themes/main/docker
+      - ignore_volume:/var/www/html/wp-content/themes/main/.git
+    depends_on:
+      - db
+
+  db:
+    container_name: wordpress-db
+    image: mariadb:10.1.32
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpassword
+      MYSQL_USER:     wordpress
+      MYSQL_PASSWORD: wordpress
+      MYSQL_DATABASE: wordpress
+    ports:
+      - 3306:3306
+    volumes:
+      - db_volume:/var/lib/mysql
+
+volumes:
+  app_volume:
+  db_volume:
+  ignore_volume:

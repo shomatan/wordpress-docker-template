@@ -17,8 +17,8 @@ RUN apk update \
 		libxslt \
 	&& apk add --no-cache --virtual .build-php \
 		$PHPIZE_DEPS \
-		mariadb \
-		mariadb-dev \
+		mariadb=${MYSQL_VERSION} \
+		mariadb-dev=${MYSQL_VERSION} \
 		gd-dev \
 		jpeg-dev \
 		libpng-dev \
@@ -56,7 +56,7 @@ COPY opcache*.blacklist /etc/php.d/
 
 RUN set -xe \
 	&& apk update \
-	&& apk add --no-cache wget
+	&& apk add --no-cache wget mariadb-client=${MYSQL_VERSION}
 
 # Install wp-cli
 RUN set -xe \
