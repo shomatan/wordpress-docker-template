@@ -26,5 +26,9 @@ If login, Username: `admin` Password: `admin`.
 ### Backup
 	make backup
 
+After creates a SQL file as ./backup/wordpress.sql
+
 ### Resotre
+Restore wordpress database from ./backup/wordpress.sql
+
 	make restore
