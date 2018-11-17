@@ -30,7 +30,7 @@ destroy: ## Remove and clean up wordpress
 	docker-compose down -v
 
 .PHONY: backup
-backup:
+backup: ## Backup wordpress database. All containers will stop after backup.
 	make up
 	docker stop wordpress-web wordpress-app
 	docker exec wordpress-db \
@@ -39,7 +39,14 @@ backup:
 		'
 	make stop
 
-
+restore: ## Restore wordpress database from ./backup/wordpress.sql . All containers will stop after restore.
+	make up
+	docker stop wordpress-web wordpress-app
+	docker exec wordpress-db \
+		bash -c ' \
+			mysql -u $(DB_USER) -p$(DB_PASS) $(DB_NAME) < /backup/wordpress.sql \
+		'
+	make stop
 
 wait-db:
 	@docker exec wordpress-db \
