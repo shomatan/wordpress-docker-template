@@ -14,3 +14,17 @@
 
 After you can acccess [http://localhost](http://localhost).  
 If login, Username: `admin` Password: `admin`.
+
+### 3. Stop wordpress
+    make stop
+
+### 4. Remove and delete volumes
+    make destory
+
+## Backup and restore
+
+### Backup
+	make backup
+
+### Resotre
+	make restore
