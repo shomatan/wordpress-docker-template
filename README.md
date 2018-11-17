@@ -1,4 +1,9 @@
-# wordpress-docker-template
+# Docker compose: wordpress
+Easy to build Wordpress theme development environment.  
+The main theme and the root directory are synchronized.
+
+## Features
+- You don't have to install nginx and php, mysql.
 
 ## Requirements
 - Docker
