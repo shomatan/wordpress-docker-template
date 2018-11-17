@@ -1,6 +1,9 @@
 .DEFAULT_GOAL := help
 
 DB_HOST=db
+DB_USER=wordpress
+DB_PASS=wordpress
+DB_NAME=wordpress
 WP_USER=admin
 WP_PASS=admin
 WP_MAIL=wp@example123.com
@@ -10,16 +13,10 @@ build: ## Build a Docker image for wordpress
 
 up: ## Execute wordpress
 	docker-compose up -d
-	@docker exec wordpress-db \
-		bash -c ' \
-			until echo \\'\q\\' | mysql -h $(DB_HOST) -u"root" -p"rootpassword" "wordpress" ; do \
-				>&2 echo "**** MySQL is unavailable - sleeping" && \
-				sleep 1; \
-			done \
-		'
+	make wait-db
 	-@docker exec wordpress-app \
 		sh -c ' \
-			wp config create --path=/var/www/html --dbhost=$(DB_HOST) --dbname=wordpress --dbuser=wordpress --dbpass=wordpress --allow-root \
+			wp config create --path=/var/www/html --dbhost=$(DB_HOST) --dbname=$(DB_HOST) --dbuser=$(DB_USER) --dbpass=$(DB_PASS) --allow-root \
 		'
 	docker exec wordpress-app \
 		sh -c ' \
@@ -31,6 +28,27 @@ stop: ## Stop wordpress
 
 destroy: ## Remove and clean up wordpress
 	docker-compose down -v
+
+.PHONY: backup
+backup:
+	make up
+	docker stop wordpress-web wordpress-app
+	docker exec wordpress-db \
+		bash -c ' \
+			mysqldump -u $(DB_USER) -p$(DB_PASS) $(DB_NAME) > /backup/wordpress.sql \
+		'
+	make stop
+
+
+
+wait-db:
+	@docker exec wordpress-db \
+		bash -c ' \
+			until echo \\'\q\\' | mysql -h $(DB_HOST) -u"root" -p"rootpassword" "$(DB_NAME)" ; do \
+				>&2 echo "**** MySQL is unavailable - sleeping" && \
+				sleep 1; \
+			done \
+		'
 
 .PHONY: help
 help:
